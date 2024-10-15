@@ -7,27 +7,39 @@ defineProps({
 </script>
 
 <template>
-  <div>
-    <img :src="user.avatar" alt="Profile_Picture" class="circular-img" />
-    <h3>{{ user.first_name }} {{ user.last_name }}</h3>
-    <div class="action-buttons">
-      <button @click="editUser(user.id)">Edit</button>
-      <button @click="deleteUser(user.id)">Delete</button>
-    </div>
-  </div>
+  <tr class="user-row border-gray-100">
+    <td>
+      <img :src="user.avatar" alt="Profile_Picture" class="circular-img mr-5" />
+    </td>
+    <td class="full-name">
+      <span>{{ user.first_name }} {{ user.last_name }}</span>
+    </td>
+    <td class="action-buttons">
+      <!-- bg-blue-500 text-white -->
+      <button @click="editUser(user.id)" class="text-gray px-3 py-3">
+        <i class="pi pi-pen-to-square"></i>
+      </button>
+      <!-- bg-red-500 text-white -->
+      <button @click="deleteUser(user.id)" class="text-gray px-3 py-3">
+        <i class="pi pi-trash"></i>
+      </button>
+    </td>
+  </tr>
 </template>
 
 <style scoped>
 .circular-img {
-  width: 50px; /* Set a fixed width */
-  height: 50px; /* Set a fixed height */
-  border-radius: 50%; /* Make the image circular */
-  object-fit: cover; /* Ensures the image covers the area without stretching */
+  width: 60px; /* Ustalona szerokość */
+  height: 60px; /* Ustalona wysokość */
+  object-fit: cover; /* Zapewnienie, że obrazek wypełnia obszar */
+  border-radius: 50%; /* Określenie kształtu okrągłego */
 }
 
 .action-buttons {
-  margin-left: auto;
   display: flex;
-  justify-content: space-between;
+}
+
+.full-name {
+  flex-grow: 1;
 }
 </style>
