@@ -29,7 +29,9 @@
 </template>
 
 <script>
-export default {
+import { defineComponent } from "vue";
+
+export default defineComponent({
   props: {
     currentPage: {
       type: Number,
@@ -40,22 +42,30 @@ export default {
       required: true,
     },
   },
-  methods: {
-    goToPage(page) {
-      this.$emit("page-changed", page);
-    },
-    goToPreviousPage() {
-      if (this.currentPage > 1) {
-        this.$emit("page-changed", this.currentPage - 1);
+  setup(props, { emit }) {
+    const goToPage = (page) => {
+      emit("page-changed", page);
+    };
+
+    const goToPreviousPage = () => {
+      if (props.currentPage > 1) {
+        emit("page-changed", props.currentPage - 1);
       }
-    },
-    goToNextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.$emit("page-changed", this.currentPage + 1);
+    };
+
+    const goToNextPage = () => {
+      if (props.currentPage < props.totalPages) {
+        emit("page-changed", props.currentPage + 1);
       }
-    },
+    };
+
+    return {
+      goToPage,
+      goToPreviousPage,
+      goToNextPage,
+    };
   },
-};
+});
 </script>
 
 <style scoped>

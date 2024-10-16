@@ -1,9 +1,30 @@
 <script setup>
 import { ref, computed, onMounted, defineProps } from "vue";
+import { useRoute } from "vue-router";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 defineProps({
   user: Object,
 });
+
+const deleteUser = async (first_name, last_name, id) => {
+  try {
+    const response = await fetch(`https://reqres.in/api/users/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      toast.error(`Error: ${response.status} - ${response.statusText}`);
+    }
+    toast.success(
+      `User ${first_name} ${last_name} with id ${id} deleted successfully.`
+    );
+  } catch (error) {
+    toast.error("Error deleting user:", error);
+  }
+};
 </script>
 
 <template>
@@ -15,14 +36,15 @@ defineProps({
       <span>{{ user.first_name }} {{ user.last_name }}</span>
     </td>
     <td class="action-buttons">
-      <button
-        @click="editUser(user.id)"
+      <RouterLink
+        :to="{ name: 'edituser', params: { userId: user.id } }"
         class="px-3 py-2 text-gray-500 bg-transparent hover:text-black hover:bg-gray-300 rounded transition-shadow duration-300"
       >
         <i class="pi pi-pen-to-square"></i>
-      </button>
+      </RouterLink>
+
       <button
-        @click="deleteUser(user.id)"
+        @click="deleteUser(user.first_name, user.last_name, user.id)"
         class="px-3 py-2 text-gray-500 bg-transparent hover:text-black hover:bg-gray-300 rounded transition-shadow duration-300"
       >
         <i class="pi pi-trash"></i>

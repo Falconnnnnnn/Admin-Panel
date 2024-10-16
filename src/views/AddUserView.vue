@@ -1,7 +1,7 @@
 <script setup>
-import AddUser from "@/components/AddUser.vue";
+import UserForm from "@/components/UserForm.vue";
 </script>
 
 <template>
-  <AddUser />
+  <UserForm />
 </template>
