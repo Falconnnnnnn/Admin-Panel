@@ -1,11 +1,10 @@
 <script setup>
 import { RouterLink } from "vue-router";
-import { toRefs } from "vue";
+import { toRefs, ref, computed, watch } from "vue";
 import { useToast } from "vue-toastification";
 
 import "../assets/add_user.css";
 import "../assets/cancel.css";
-import { ref, computed, onMounted, watch } from "vue";
 
 const props = defineProps({
   user: {
@@ -13,8 +12,8 @@ const props = defineProps({
     required: false,
   },
 });
-const toast = useToast();
 
+const toast = useToast();
 const { user } = toRefs(props);
 
 const imageUrl = ref(
@@ -58,7 +57,7 @@ const toggleInputVisibility = () => {
 const updateImage = () => {
   if (newImageUrl.value && validateUrl(newImageUrl.value)) {
     imageUrl.value = newImageUrl.value;
-    isInputVisible.value = false; //
+    isInputVisible.value = false;
     urlError.value = "";
   } else {
     urlError.value = "Please enter a valid URL.";
@@ -67,30 +66,23 @@ const updateImage = () => {
 
 const validateUrl = (url) => {
   const urlPattern = new RegExp(
-    "^(https?:\\/\\/)" + //
+    "^(https?:\\/\\/)" +
       "((([a-zA-Z0-9\\-]+\\.)+[a-zA-Z]{2,})|" +
       "localhost|" +
       "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}|" +
       "\\[?[a-fA-F0-9]*:[a-fA-F0-9:%.\\/]*)" +
       "(\\:\\d+)?(\\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?$"
   );
-  // regex with extension
-  // const urlPattern = new RegExp(
-  //   "^(https?:\\/\\/)" +
-  //     "((([a-zA-Z0-9\\-]+\\.)+[a-zA-Z]{2,})|" +
-  //     "localhost|" +
-  //     "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}|" +
-  //     "\\[?[a-fA-F0-9]*:[a-fA-F0-9:%.\\/]*)" +
-  //     "(\\:\\d+)?(\\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?\\.(jpg|jpeg|png|gif|bmp|webp)$"
-  // );
   return urlPattern.test(url);
 };
+
 const sendRequest = async (userData) => {
   const userId = user.value?.id || null;
-  const methodName = !!userId ? "PUT" : "POST";
-  const url = !!userId
+  const methodName = userId ? "PUT" : "POST";
+  const url = userId
     ? `https://reqres.in/api/users/${userId}`
     : "https://reqres.in/api/users";
+
   try {
     const response = await fetch(url, {
       method: methodName,
@@ -99,19 +91,19 @@ const sendRequest = async (userData) => {
       },
       body: JSON.stringify(userData),
     });
+
     if (!response.ok) {
-      !!userId
-        ? toast.error("Failed to create user")
-        : toast.error("Failed to update user");
+      toast.error(userId ? "Failed to update user" : "Failed to create user");
+      return;
     }
 
     const data = await response.json();
-    !!userId
-      ? toast.success("User updated successfully")
-      : toast.success("User created successfully");
+    toast.success(
+      userId ? "User updated successfully" : "User created successfully"
+    );
     return data;
   } catch (error) {
-    console.error("Error creating user:", error);
+    toast.error("Error creating user:", error);
   }
 };
 
@@ -217,7 +209,5 @@ const submitForm = async (event) => {
     </div>
   </section>
 </template>
-
-<script></script>
 
 <style></style>

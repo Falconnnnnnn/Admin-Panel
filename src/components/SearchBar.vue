@@ -1,5 +1,3 @@
-<script setup></script>
-
 <template>
   <div class="search-bar">
     <input
@@ -14,6 +12,19 @@
   </div>
 </template>
 
+<script setup>
+import { ref } from "vue";
+
+// Reactive variable for search query
+const searchQuery = ref("");
+
+// Function to handle search action
+const search = () => {
+  // Implement the search logic here
+  console.log(`Searching for: ${searchQuery.value}`);
+};
+</script>
+
 <style scoped>
 .search-bar {
   position: relative;
@@ -27,6 +38,7 @@
   border-radius: 20px;
   outline: none;
 }
+
 .search-input::placeholder {
   color: #374151;
   opacity: 1;

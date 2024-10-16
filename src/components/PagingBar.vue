@@ -86,7 +86,7 @@ export default defineComponent({
   border-radius: 0;
   cursor: pointer;
   font-size: 14px;
-  margin: 0px;
+  margin: 0;
 }
 
 .page-button.active {

@@ -1,54 +1,3 @@
-<script setup>
-import { ref, computed, onMounted, watch } from "vue";
-import { RouterLink } from "vue-router";
-import UserListing from "./UserListing.vue";
-import SearchBar from "./SearchBar.vue";
-
-import PagingBar from "./PagingBar.vue";
-import PulseLoader from "vue-spinner/src/PulseLoader.vue";
-import "../assets/user_table.css";
-import "../assets/add_user.css";
-
-const users = ref([]);
-const currentPage = ref(1);
-const perPage = ref(9);
-const totalPages = ref(0);
-const loading = ref(false);
-const fetchUsers = async (page) => {
-  loading.value = true;
-  try {
-    const response = await fetch(
-      `https://reqres.in/api/users?page=${page}&per_page=${perPage.value}&delay=4`
-    ); // `https://reqres.in/api/users?delay=15`
-    const data = await response.json();
-    users.value = data.data;
-    totalPages.value = data.total_pages;
-  } catch (error) {
-    console.log(error);
-  } finally {
-    loading.value = false;
-  }
-};
-
-const paginatedUsers = computed(() => {
-  console.log(currentPage.value);
-  return users.value.slice(0, 0 + perPage.value);
-});
-
-const changePage = (page) => {
-  if (page < 1 || page > totalPages.value) return;
-  currentPage.value = page;
-};
-
-onMounted(() => {
-  fetchUsers(currentPage.value);
-});
-
-watch(currentPage, (newPage) => {
-  fetchUsers(newPage);
-});
-</script>
-
 <template>
   <div
     class="user-list-container container-x lg:container m-auto w-full md:w-2/3 lg:w-3/4 min-h-[300px] overflow-auto mt-5"
@@ -95,3 +44,63 @@ watch(currentPage, (newPage) => {
     />
   </div>
 </template>
+
+<script setup>
+import { ref, computed, onMounted, watch } from "vue";
+import { RouterLink } from "vue-router";
+import UserListing from "./UserListing.vue";
+import SearchBar from "./SearchBar.vue";
+import PagingBar from "./PagingBar.vue";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+
+import "../assets/user_table.css";
+import "../assets/add_user.css";
+
+// State variables
+const users = ref([]);
+const currentPage = ref(1);
+const perPage = ref(9);
+const totalPages = ref(0);
+const loading = ref(false);
+
+// Function to fetch users from API
+const fetchUsers = async (page) => {
+  loading.value = true;
+  try {
+    const response = await fetch(
+      `https://reqres.in/api/users?page=${page}&per_page=${perPage.value}`
+    );
+    const data = await response.json();
+    users.value = data.data;
+    totalPages.value = data.total_pages;
+  } catch (error) {
+    toast.error("Error fetching users:", error);
+  } finally {
+    loading.value = false;
+  }
+};
+
+// Computed property for paginated users
+const paginatedUsers = computed(() => {
+  const start = (currentPage.value - 1) * perPage.value;
+  return users.value.slice(start, start + perPage.value);
+});
+
+// Change page function
+const changePage = (page) => {
+  if (page < 1 || page > totalPages.value) return;
+  currentPage.value = page;
+};
+
+// Lifecycle hooks
+onMounted(() => {
+  fetchUsers(currentPage.value);
+});
+
+// Watch for changes in current page
+watch(currentPage, (newPage) => {
+  fetchUsers(newPage);
+});
+</script>
+
+<style scoped></style>

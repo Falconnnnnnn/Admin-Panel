@@ -32,7 +32,6 @@
 .header {
   display: grid;
   grid-template-columns: 70px 1fr 82px;
-
   align-items: center;
   gap: 5px;
   padding: 10px;

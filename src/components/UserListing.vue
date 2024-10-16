@@ -1,32 +1,3 @@
-<script setup>
-import { ref, computed, onMounted, defineProps } from "vue";
-import { useRoute } from "vue-router";
-import { useToast } from "vue-toastification";
-
-const toast = useToast();
-
-defineProps({
-  user: Object,
-});
-
-const deleteUser = async (first_name, last_name, id) => {
-  try {
-    const response = await fetch(`https://reqres.in/api/users/${id}`, {
-      method: "DELETE",
-    });
-
-    if (!response.ok) {
-      toast.error(`Error: ${response.status} - ${response.statusText}`);
-    }
-    toast.success(
-      `User ${first_name} ${last_name} with id ${id} deleted successfully.`
-    );
-  } catch (error) {
-    toast.error("Error deleting user:", error);
-  }
-};
-</script>
-
 <template>
   <tr class="user-row border-gray-100">
     <td>
@@ -44,7 +15,7 @@ const deleteUser = async (first_name, last_name, id) => {
       </RouterLink>
 
       <button
-        @click="deleteUser(user.first_name, user.last_name, user.id)"
+        @click="() => deleteUser(user.first_name, user.last_name, user.id)"
         class="px-3 py-2 text-gray-500 bg-transparent hover:text-black hover:bg-gray-300 rounded transition-shadow duration-300"
       >
         <i class="pi pi-trash"></i>
@@ -52,6 +23,39 @@ const deleteUser = async (first_name, last_name, id) => {
     </td>
   </tr>
 </template>
+
+<script setup>
+import { defineProps } from "vue";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
+
+const props = defineProps({
+  user: {
+    type: Object,
+    required: true,
+  },
+});
+
+// Function to delete a user
+const deleteUser = async (firstName, lastName, id) => {
+  try {
+    const response = await fetch(`https://reqres.in/api/users/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    }
+
+    toast.success(
+      `User ${firstName} ${lastName} with id ${id} deleted successfully.`
+    );
+  } catch (error) {
+    toast.error(`Error deleting user: ${error.message}`);
+  }
+};
+</script>
 
 <style scoped>
 .user-row {
