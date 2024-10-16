@@ -28,7 +28,7 @@
   outline: none;
 }
 .search-input::placeholder {
-  color: #374151; /* text-gray-700 */
+  color: #374151;
   opacity: 1;
 }
 

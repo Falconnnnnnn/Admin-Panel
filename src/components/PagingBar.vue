@@ -1,0 +1,101 @@
+<template>
+  <div class="paging-bar">
+    <button
+      class="page-button first-page"
+      @click="goToPreviousPage"
+      :disabled="currentPage === 1"
+    >
+      <i class="pi pi-angle-double-left"></i>
+    </button>
+    <div class="page-numbers">
+      <button
+        v-for="page in totalPages"
+        :key="page"
+        class="page-button"
+        :class="{ active: currentPage === page }"
+        @click="goToPage(page)"
+      >
+        {{ page }}
+      </button>
+    </div>
+    <button
+      class="page-button last-page"
+      @click="goToNextPage"
+      :disabled="totalPages < 2 || currentPage === totalPages"
+    >
+      <i class="pi pi-angle-double-right"></i>
+    </button>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    currentPage: {
+      type: Number,
+      required: true,
+    },
+    totalPages: {
+      type: Number,
+      required: true,
+    },
+  },
+  methods: {
+    goToPage(page) {
+      this.$emit("page-changed", page);
+    },
+    goToPreviousPage() {
+      if (this.currentPage > 1) {
+        this.$emit("page-changed", this.currentPage - 1);
+      }
+    },
+    goToNextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.$emit("page-changed", this.currentPage + 1);
+      }
+    },
+  },
+};
+</script>
+
+<style scoped>
+.paging-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.page-button {
+  box-sizing: border-box;
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 0;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 0px;
+}
+
+.page-button.active {
+  background-color: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+.page-button.first-page {
+  border-radius: 5px 0 0 5px;
+}
+
+.page-button.last-page {
+  border-radius: 0 5px 5px 0;
+}
+
+.page-button:disabled {
+  background-color: rgba(240, 240, 240, 0.6);
+  cursor: not-allowed;
+  color: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(200, 200, 200, 0.6);
+}
+</style>

@@ -1,0 +1,18 @@
+.btn-add-user {
+  background-color: #38a169;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+.icon {
+  margin-right: 8px;
+}
+
+.btn-add-user:hover {
+  background-color: #2f855a;
+}
