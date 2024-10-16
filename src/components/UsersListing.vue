@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import UserListing from "./UserListing.vue";
+import SearchBar from "./SearchBar.vue";
 
 // async fetchUsers() {
 //   const response = await fetch('https://reqres.in/api/users?page=1'); // Zmień na odpowiedni URL
@@ -43,30 +44,28 @@ const changePage = (page) => {
 </script>
 <!-- bg-gray-200 px-4 py-10 flex justify-center -->
 <template>
-  <h2 class="text-3xl font-bold mb-6 text-center">Users list</h2>
-  <table
-    class="user-list container-xl lg:container m-auto w-full md:w-2/3 lg:w-3/4 bg-white p-6 rounded shadow-md"
+  <div
+    class="user-list-container container-xl lg:container m-auto w-full md:w-2/3 lg:w-3/4 min-h-[300px] overflow-auto mt-5"
   >
-    <thead class="">
-      <!-- Nagłówki dla Full Name i Actions -->
-      <tr class="header grid grid-cols-3 mb-4 font-bold">
-        <th class="avatar-column">&nbsp;</th>
-        <!-- Niewidoczny div dla Avatara -->
-        <th class="text-left">Full Name</th>
-        <!-- Nagłówek dla imienia i nazwiska -->
-        <th class="text-center">Action</th>
-        <!-- Nagłówek dla akcji -->
-      </tr>
-    </thead>
-    <tbody>
-      <UserListing
-        v-for="(user, index) in paginatedUsers"
-        :key="user.id"
-        :user="user"
-        :class="[index % 2 === 0 ? 'bg-gray-200' : 'bg-white']"
-      />
-    </tbody>
-  </table>
+    <table class="user-list">
+      <SearchBar />
+      <thead>
+        <tr class="header font-bold">
+          <th class="avatar-column"></th>
+          <th class="text-left">Full Name</th>
+          <th class="text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <UserListing
+          v-for="(user, index) in paginatedUsers"
+          :key="user.id"
+          :user="user"
+          :class="[index % 2 === 0 ? 'bg-gray-100' : 'bg-white']"
+        />
+      </tbody>
+    </table>
+  </div>
   <!-- <div class="user-list">
     <div v-for="user in paginatedUsers" :key="user.id" class="user-card">
       <h3>{{ user.first_name }} {{ user.last_name }}</h3>
@@ -77,6 +76,21 @@ const changePage = (page) => {
 </template>
 
 <style scoped>
+.user-list-container {
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-list {
+  width: 100%;
+  padding: 0; /* Upewnij się, że tabela nie ma paddingów */
+
+  border-collapse: collapse;
+  height: auto; /* Upewnij się, że wysokość tabeli jest automatyczna */
+}
+
 .text-left {
   text-align: left;
 }
@@ -85,10 +99,10 @@ const changePage = (page) => {
   text-align: center;
 }
 
-.header,
-.user-row {
+.header {
   display: grid;
-  grid-template-columns: 82px 1fr 82px; /* Stała szerokość avatara, elastyczne nazwisko, stała szerokość przycisków */
+  grid-template-columns: 70px 1fr 82px;
+
   align-items: center;
   gap: 5px;
   padding: 10px;
@@ -96,7 +110,7 @@ const changePage = (page) => {
 
 .user-list {
   display: grid;
-  grid-template-columns: 1fr; /* Umożliwia tylko jedną kolumnę */
-  gap: 15px; /* Przestrzeń między elementami */
+  grid-template-columns: 1fr;
+  gap: 15px;
 }
 </style>
