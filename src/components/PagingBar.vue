@@ -78,6 +78,7 @@ export default defineComponent({
 
 .page-button {
   box-sizing: border-box;
+  color: #38a169;
   width: 30px;
   height: 30px;
   background-color: white;
